@@ -187,16 +187,63 @@
   const intro = { token: 0, running: false, wake: null };
   let audioGen = 0; // muda a cada play/pausa: fades antigos não mexem no som novo
 
-  async function loadPreviews(round) {
-    const ids = round.options.map((s) => s.id).filter((id) => !(id in player.previews));
-    if (!ids.length) return;
+  // O link do trecho é pedido ao Deezer pelo próprio navegador (JSONP), porque o Deezer
+  // libera cada faixa por país: pedindo daqui, vale o país de quem está jogando, e não o
+  // do servidor (o Railway fica nos EUA, onde muita música brasileira não está liberada).
+  // Se o Deezer não responder, o servidor (/api/preview) tenta no lugar.
+  let jsonpSeq = 0;
+  function deezerJsonp(trackId, ms) {
+    return new Promise((resolve, reject) => {
+      const cb = '__dz' + (++jsonpSeq) + '_' + Date.now();
+      const s = document.createElement('script');
+      const done = () => { clearTimeout(timer); delete window[cb]; s.remove(); };
+      const timer = setTimeout(() => { done(); window[cb] = () => delete window[cb]; reject(new Error('tempo')); }, ms);
+      window[cb] = (body) => { done(); body && !body.error ? resolve(body) : reject(new Error('deezer')); };
+      s.onerror = () => { done(); reject(new Error('rede')); };
+      s.src = 'https://api.deezer.com/track/' + encodeURIComponent(trackId) + '?output=jsonp&callback=' + cb;
+      document.head.append(s);
+    });
+  }
+  function linkExpired(url) {
+    const exp = Number((String(url).match(/exp=(\d+)/) || [])[1]);
+    return exp ? exp * 1000 - 60_000 < Date.now() : false;
+  }
+  function hasPreview(id) {
+    return id in player.previews && (player.previews[id] === null || !linkExpired(player.previews[id]));
+  }
+
+  async function serverPreview(id) {
+    const ctrl = new AbortController();
+    const timer = setTimeout(() => ctrl.abort(), 8000);
     try {
-      const ctrl = new AbortController();
-      const timer = setTimeout(() => ctrl.abort(), 4000);
-      const { previews } = await api('/api/preview?ids=' + ids.map(encodeURIComponent).join(','), { signal: ctrl.signal });
-      clearTimeout(timer);
-      Object.assign(player.previews, previews);
-    } catch { ids.forEach((id) => { if (!(id in player.previews)) player.previews[id] = null; }); }
+      const { previews } = await api('/api/preview?ids=' + encodeURIComponent(id), { signal: ctrl.signal });
+      return previews[id] || null;
+    } finally { clearTimeout(timer); }
+  }
+  async function fetchPreview(id) {
+    const c = COVERS[id];
+    const trackId = Array.isArray(c) ? c[1] : null;
+    if (trackId) {
+      try {
+        const b = await deezerJsonp(trackId, 4000);
+        if (b.preview) return b.preview;
+      } catch { /* cai para o servidor */ }
+    }
+    return serverPreview(id);
+  }
+
+  const previewLoads = {}; // id -> promessa em andamento (não pede a mesma faixa duas vezes)
+  function loadPreviews(round, force) {
+    const ids = round.options.map((s) => s.id).filter((id) => force || !hasPreview(id));
+    return Promise.all(ids.map((id) => {
+      if (!previewLoads[id]) {
+        previewLoads[id] = fetchPreview(id)
+          .then((url) => { player.previews[id] = url; })
+          .catch(() => { delete player.previews[id]; }) // falha de rede: tenta de novo no próximo play
+          .finally(() => delete previewLoads[id]);
+      }
+      return previewLoads[id];
+    }));
   }
 
   function fade(to, ms) {
@@ -212,7 +259,14 @@
     });
   }
 
-  async function playSong(id, fromStart) {
+  async function playSong(id, fromStart, retried) {
+    if (!player.previews[id] || linkExpired(player.previews[id])) {
+      // sem link (falhou antes) ou link vencido: pede de novo uma vez
+      if (retried) return false;
+      if (player.id === id) player.id = null;
+      await loadPreviews({ options: [{ id }] }, true);
+      retried = true;
+    }
     const url = player.previews[id];
     if (!url) return false;
     audioGen++;
@@ -230,7 +284,13 @@
       await audio.play();
       fade(player.volume, 250);
       return true;
-    } catch { return false; } // navegador bloqueou o som ou o link falhou
+    } catch (e) {
+      // NotAllowedError = navegador bloqueou o som; outro erro = link falhou (vencido?): pede um novo
+      if (e && e.name === 'NotAllowedError' || retried) return false;
+      player.id = null;
+      await loadPreviews({ options: [{ id }] }, true);
+      return playSong(id, fromStart, true);
+    }
   }
 
   async function stopAudio(smooth) {
@@ -285,7 +345,8 @@
       // no celular os cards ficam em coluna: acompanha a música que acabou de entrar
       if (card.getBoundingClientRect().bottom > window.innerHeight) card.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
       const id = card.dataset.id;
-      const playing = player.soundOn && await playSong(id, true);
+      // os links acabaram de ser pedidos: na apresentação não insiste (quem quiser, aperta o play)
+      const playing = player.soundOn && await playSong(id, true, true);
       if (token !== intro.token) return;
       await wait(playing ? SNIPPET_MS : NO_AUDIO_MS);
       if (token !== intro.token) return;

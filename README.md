@@ -47,7 +47,9 @@ Atenção: incluir ou remover músicas de um ano pode mudar as opções daquela 
 
 ## Capas e trechos
 
-As capas e os trechos de 30 s vêm da API pública do Deezer. O arquivo `public/covers.js` guarda, para cada música, o hash da capa e o id da faixa no Deezer. O link do trecho expira depois de algumas horas, então o servidor busca um link novo pela rota `/api/preview` e guarda em cache até perto de expirar. Depois de incluir músicas, rode:
+As capas e os trechos de 30 s vêm da API pública do Deezer. O arquivo `public/covers.js` guarda, para cada música, o hash da capa e o id da faixa no Deezer. O link do trecho expira depois de algumas horas, então ele é pedido na hora. Quem pede é o próprio navegador de quem joga (JSONP direto no Deezer), porque o Deezer libera cada faixa por país: o servidor no Railway fica nos EUA, onde muita música brasileira não está liberada. Se o Deezer não responder, o navegador usa a rota `/api/preview` do servidor.
+
+A busca do script prefere a gravação que fez sucesso: descarta remix, mix, medley, karaokê, cover e artistas "imitadores", aceita "Radio Edit"/"Single Version", e no sertanejo e no pagode aceita a versão ao vivo quando ela é a mais ouvida. Depois de incluir músicas, rode:
 
 ```bash
 node scripts/fetch-covers.js        # busca só as músicas sem capa

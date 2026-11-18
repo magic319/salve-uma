@@ -33,26 +33,73 @@ function artistParts(a) {
   const parts = a.split(/\s*(?:,|&|\be\b|\bx\b|feat\.?|ft\.?|part\.?)\s*/i).map(norm).filter((p) => p.length > 1);
   return [norm(main), ...parts];
 }
-const LIVE = /ao vivo|live|ac[uú]stic|acoustic|remix|karaok|instrumental|cover|vers[aã]o/i;
+// Trechos entre parênteses (ou depois de " - ") que indicam a própria gravação do sucesso,
+// só com outro corte ou remasterização: "Radio Edit", "Single Version", "Remastered 2009"...
+const CANON_WORDS = /\b(?:original|us|uk|radio|single|album|lp|main|video|short|7["”]?|7-inch|soundtrack|edit|version|mix|remaster(?:ed)?|remasterizad[oa]|em|mono|stereo|\d{4})\b/gi;
+const isCanon = (x) => !x.replace(CANON_WORDS, '').replace(/[\s;,/&.'’-]+/g, '');
+// Versões que não são a gravação conhecida. Só valem se o próprio título no jogo pedir.
+const ALTERED = /\b(re-?mix|rmx|mix(?:ed)?|medley|mashup|extended|sped ?up|slowed|reverb|karaok\w*|instrumental|a ?cc?app?ella|cover|tribute|lullaby|8.?bit|piano|orchestral|orquestra\w*|bootleg|edit|dub|lo-?fi|ac[uú]stic[oa]|acoustic|unplugged|demo|re-?recorded|remake|reimagined|reprise|powermix|club|bonus|rehe?arsal|taylor.s version|vers[aã]o|version|ensaio|vs\.?|incidenta(?:l|is))\b/i;
+const LIVE = /\b(ao vivo|live|en vivo|en directo|sessions?|multishow|dvd|mtv|gravad[oa] na deezer|el[eé]trico|ac[uú]stico|acoustic|unplugged)\b/i;
+// Coletâneas de festa/remix costumam trazer outra gravação da faixa (coletânea de
+// sucessos com a gravação original não perde nada).
+const PARTY = /festeja|na pista|arrocha|pancad[aã]o|esquenta|bail[aã]o|flashback|ploc|remix|fitness|workout|sped up|slowed|dj mix|megamix|\bmixed\b|a ?cc?app?ella|karaok|babies go|by request/i;
+// Regravações de terceiros disfarçadas (artista "Made famous by X", "In the style of X"...)
+const FAKE = /made famous|in the style|originally|tribute|karaok|cover|sax|lullaby|8.?bit|performed by|as made|emulation/i;
+
+// Título igual, ou o título do jogo inteiro dentro do título do Deezer como palavras
+// (ex.: "Bonde Passou" x "O Bonde Passou"), mas nunca com número a mais
+// ("Poesia Acústica 1" não aceita "Poesia Acústica 13") nem título de 1 palavra curta.
+function titleScore(want, got) {
+  if (got === want) return 6;
+  const [short, long] = want.length <= got.length ? [want, got] : [got, want];
+  if (short.length < 4) return -Infinity;
+  const i = (' ' + long + ' ').indexOf(' ' + short + ' ');
+  if (i < 0) return -Infinity;
+  const rest = (long.slice(0, i) + ' ' + long.slice(i + short.length)).trim();
+  if (/\b\d{1,2}\b/.test(rest) || rest.split(' ').length > 3) return -Infinity;
+  return 2;
+}
 
 function score(song, t, anyArtist) {
   const want = norm(song.title);
   const got = norm(t.title_short || t.title);
-  let s = 0;
-  if (got === want) s += 6;
-  else if (got.includes(want) || want.includes(got)) s += 3;
-  else return -1;
-  const an = squash(t.artist && t.artist.name);
-  const artistOk = artistParts(song.artist).some((p) => { p = p.replace(/ /g, ''); return p && an && (an.includes(p) || p.includes(an)); });
-  if (artistOk) s += 4;
-  else if (!anyArtist || got !== want || /karaok|originally|tribute|made famous/i.test(t.title + ' ' + t.artist.name)) return -1;
-  if (LIVE.test(t.title) || LIVE.test((t.album && t.album.title) || '')) s -= 3;
-  s += Math.min(3, (t.rank || 0) / 300000);
+  const ts = titleScore(want, got);
+  if (ts < 0) return -Infinity;
+  let s = ts;
+  const artistName = (t.artist && t.artist.name) || '';
+  const album = (t.album && t.album.title) || '';
+  if ((FAKE.test(artistName) || FAKE.test(t.title)) && !FAKE.test(song.artist + ' ' + song.title)) return -Infinity;
+  // "Grupo Revelação" = "Revelação", "MC Kevin o Chris" = "Kevin o Chris"; mas "Hello I'm Adele" não é Adele
+  const bare = (x) => x.replace(/^(grupo|the|os|as|mc|dj|banda)(?=.{3})/, '');
+  const an = bare(squash(artistName));
+  const parts = artistParts(song.artist).map((p) => bare(p.replace(/ /g, ''))).filter(Boolean);
+  if (an && parts.some((p) => an.startsWith(p) || p.startsWith(an))) s += 4; // nome igual (ou "X e Y" começando por X)
+  else if (!anyArtist || got !== want || (t.rank || 0) < 300000) return -Infinity; // outro nome: só faixa muito ouvida
+  // Tira os parênteses que não mudam a gravação: cortes/remasterizações ("Radio Edit") e
+  // créditos de quem está na música ("feat. Sean Paul", "Cardi B Version").
+  const credit = (x) => /^\s*(feat|ft|with|com|part)\b/i.test(x) ||
+    (parts.some((p) => p.length > 2 && squash(x).includes(p)) && /^[^;]*\b(version|vs\.?|x)\b[^;]*$/i.test(x) && x.split(/\s+/).length <= 6);
+  const full = [t.title, t.title_version].filter(Boolean).join(' ')
+    .replace(/\s+-\s+([^()[\]]+)$/, ' ($1)')
+    .replace(/[([]([^)\]]*)[)\]]/g, (m, x) => (isCanon(x) || credit(x) ? ' ' : m));
+  // o que o título do jogo traz entre parênteses ("PNAU Remix", "This Time for Africa")
+  // tem que estar na versão do Deezer
+  const wantParen = (song.title.match(/\(([^)]*)\)/) || [])[1];
+  if (wantParen && !norm(t.title + ' ' + (t.title_version || '')).includes(norm(wantParen))) s -= 6;
+  if (ALTERED.test(full) && !ALTERED.test(song.title)) s -= 10;
+  if ((LIVE.test(full) || LIVE.test(album)) && !LIVE.test(song.title)) {
+    // no sertanejo e no pagode o sucesso costuma ser a gravação ao vivo
+    s -= song.genre === 'sert' || song.genre === 'pag' ? 1 : 4;
+  }
+  if ((PARTY.test(album) && !PARTY.test(song.title)) || FAKE.test(album)) s -= 4;
+  s += Math.min(4, (t.rank || 0) / 200000);
   return s;
 }
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
-async function search(q) {
+let searchImpl = searchDeezer;
+const search = (q) => searchImpl(q);
+async function searchDeezer(q) {
   for (let attempt = 0; attempt < 4; attempt++) {
     try {
       const res = await fetch('https://api.deezer.com/search?limit=15&q=' + encodeURIComponent(q));
@@ -64,7 +111,7 @@ async function search(q) {
   return [];
 }
 
-async function findCover(song) {
+async function findTrack(song) {
   const main = song.artist.split(/\s+(?:feat\.?|ft\.?)\s+/i)[0];
   const title = song.title.replace(/\(.*?\)/g, '').trim();
   const queries = [
@@ -73,18 +120,25 @@ async function findCover(song) {
     [`${title} ${artistParts(song.artist)[1] || ''}`, false],
     [`${main} ${title}`, true] // último recurso: mesmo título, artista com outro nome no Deezer
   ];
-  for (const [q, anyArtist] of queries) {
+  // As duas primeiras buscas entram juntas na disputa (a 1ª às vezes só traz remix);
+  // as outras só se nada servir.
+  let best = null, bestScore = -Infinity;
+  for (let i = 0; i < queries.length; i++) {
+    const [q, anyArtist] = queries[i];
     const results = await search(q);
-    let best = null, bestScore = -1;
     for (const t of results.slice(0, anyArtist ? 3 : 15)) {
       const sc = score(song, t, anyArtist);
-      if (sc < 0 || !t.md5_image) continue;
-      const withPreview = sc + (t.preview && t.readable !== false ? 2 : 0); // prefere faixa com trecho
-      if (withPreview > bestScore) { best = t; bestScore = withPreview; }
+      if (sc === -Infinity || !t.md5_image || !t.preview || t.readable === false) continue; // tem que ter trecho
+      if (sc > bestScore) { best = t; bestScore = sc; }
     }
-    if (best) return [best.md5_image, best.id];
+    if (best && i >= 1) break;
   }
-  return null;
+  return best;
+}
+
+async function findCover(song) {
+  const t = await findTrack(song);
+  return t ? [t.md5_image, t.id] : null;
 }
 
 async function main() {
@@ -123,4 +177,4 @@ function save(covers) {
 
 // node scripts/fetch-covers.js roda a busca; require() só exporta a função de busca
 if (require.main === module) main();
-else module.exports = { findCover, score, search };
+else module.exports = { findCover, findTrack, score, search: searchDeezer, setSearch: (f) => { searchImpl = f; } };

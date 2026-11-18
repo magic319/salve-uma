@@ -593,7 +593,7 @@
 1987|b|mpb|Djavan|Me Leve
 1988|b|mpb|Gal Costa|Brasil
 1988|b|mpb|Sandra de Sá|Bye Bye Tristeza
-1988|b|mpb|Gonzaguinha|É
+1988|b|mpb|Emílio Santiago|Saigon
 1988|b|mpb|Ed Motta & Conexão Japeri|Manuel
 1989|b|mpb|Djavan|Oceano
 1989|b|mpb|Marisa Monte|Bem Que Se Quis
@@ -1080,7 +1080,7 @@
 2017|b|rapnac|Baco Exu do Blues|Te Amo Disgraça
 2017|b|rapnac|Djonga|Olho de Tigre
 2017|b|rapnac|Matuê|Anos Luz
-2017|b|rapnac|Pineapple StormTv|Poesia Acústica #1
+2017|b|rapnac|Pineapple StormTv|Poesia Acústica #2: Sobre Nós
 2018|b|rapnac|Baco Exu do Blues|Me Desculpa Jay-Z
 2018|b|rapnac|Djonga|Junho de 94
 2018|b|rapnac|Matuê|Banco
@@ -1159,7 +1159,7 @@
 2006|b|funk|MC Sapão|Tô Tranquilão
 2006|b|funk|MC Leozinho|O Show
 2007|b|funk|MC Leozinho|Sente a Pegada
-2007|b|funk|Gaiola das Popozudas|Late Que Eu Tô Passando
+2007|b|funk|Gaiola das Popozudas|Quero Te Dar
 2007|b|funk|Perlla feat. Belo|Depois do Amor
 2007|b|funk|Bonde do Rolê|Solta o Frango
 2008|b|funk|MC Créu|Dança do Créu
@@ -1271,7 +1271,7 @@
 1985|b|pag|Almir Guineto|Jibóia
 1985|b|pag|Zeca Pagodinho|Bagaço da Laranja
 1985|b|pag|Fundo de Quintal|Ópio
-1985|b|pag|Roberto Ribeiro|Corrente de Aço
+1985|b|pag|Bezerra da Silva|Overdose de Cocada
 1985|b|pag|Alcione|Mesa de Bar
 1985|b|pag|Jovelina Pérola Negra|Feirinha da Pavuna (Confusão de Legumes)
 1985|b|pag|Beth Carvalho|Malandro Sou
@@ -1812,8 +1812,8 @@
 2010|g|pop|Lady Gaga|Alejandro
 2010|g|pop|Justin Bieber feat. Ludacris|Baby
 2010|g|pop|Taio Cruz|Dynamite
-2011|g|pop|Adele|Rolling in the Deep
-2011|g|pop|Adele|Someone Like You
+2011|g|pop|Rihanna|S&M
+2011|g|pop|Lady Gaga|The Edge of Glory
 2011|g|pop|Lady Gaga|Born This Way
 2011|g|pop|Katy Perry|Last Friday Night (T.G.I.F.)
 2011|g|pop|Jessie J feat. B.o.B|Price Tag
@@ -1844,7 +1844,7 @@
 2014|g|pop|Sia|Chandelier
 2014|g|pop|Pharrell Williams|Happy
 2014|g|pop|John Legend|All of Me
-2015|g|pop|Adele|Hello
+2015|g|pop|OMI|Cheerleader (Felix Jaehn Remix)
 2015|g|pop|Justin Bieber|Sorry
 2015|g|pop|Mark Ronson feat. Bruno Mars|Uptown Funk
 2015|g|pop|Ellie Goulding|Love Me like You Do
@@ -2893,7 +2893,7 @@
 2022|g|ele|LF System|Afraid to Feel
 2022|g|ele|Calvin Harris, Dua Lipa & Young Thug|Potion
 2022|g|ele|Oliver Tree & Robin Schulz|Miss You
-2022|g|ele|Purple Disco Machine & Sophie and the Giants|In the Dark
+2022|g|ele|Meduza & James Carter|Bad Memories
 2022|g|ele|Tiësto & Charli XCX|Hot in It
 2023|g|ele|Calvin Harris & Ellie Goulding|Miracle
 2023|g|ele|Kenya Grace|Strangers
@@ -3041,7 +3041,7 @@
 2012|g|lat|Carlos Vives|Volví a Nacer
 2012|g|lat|Yandar & Yostin|Te Pintaron Pajaritos
 2013|g|lat|Marc Anthony|Vivir Mi Vida
-2013|g|lat|Thalía feat. Prince Royce|Te Perdiste Mi Amor
+2013|g|lat|Pitbull|Echa Pa'lla (Manos Pa'rriba)
 2013|g|lat|Romeo Santos|Propuesta Indecente
 2013|g|lat|Wisin|Que Viva la Vida
 2013|g|lat|Enrique Iglesias|Loco
