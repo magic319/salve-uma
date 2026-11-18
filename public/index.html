@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Salva Uma</title>
+  <meta name="description" content="Uma música por ano. Você salva uma, as outras vão embora. Veja quantos por cento do Brasil salvou a mesma.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Figtree:wght@400;500;600&family=JetBrains+Mono:wght@500;700&display=swap">
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="wrap topbar-inner">
+      <button class="logo" id="logo" type="button" aria-label="Voltar ao início">
+        <span class="logo-mark" aria-hidden="true"></span>Salva Uma
+      </button>
+      <nav class="topnav">
+        <button type="button" class="link-btn" data-go="home">Categorias</button>
+        <button type="button" class="link-btn" data-go="how">Como funciona</button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="wrap" id="app">
+    <!-- HOME -->
+    <section id="view-home" class="view">
+      <div class="hero">
+        <p class="eyebrow">Um ano por rodada</p>
+        <h1>Só uma música fica.<br>As outras vão embora.</h1>
+        <p class="lede">Escolha uma categoria e uma década. A cada ano aparecem oito músicas lançadas naquele ano. Você salva uma e vê quantos por cento das pessoas salvaram a mesma.</p>
+      </div>
+
+      <div class="cat-section" data-type="br">
+        <div class="cat-head"><span class="pill pill-br">BR</span><h2>Só Brasil</h2></div>
+        <div class="cat-grid" id="cats-br"></div>
+      </div>
+      <div class="cat-section" data-type="gr">
+        <div class="cat-head"><span class="pill pill-gr">GRINGA</span><h2>Só gringa</h2></div>
+        <div class="cat-grid" id="cats-gr"></div>
+      </div>
+      <div class="cat-section" data-type="mix">
+        <div class="cat-head"><span class="pill pill-mix">BR × GRINGA</span><h2>Misturado</h2></div>
+        <div class="cat-grid" id="cats-mix"></div>
+      </div>
+
+      <div class="top-section">
+        <h2>Mais salvas até agora</h2>
+        <ol class="top-list" id="top-list"><li class="muted">Carregando…</li></ol>
+      </div>
+    </section>
+
+    <!-- ESCOLHA DA DÉCADA -->
+    <section id="view-decade" class="view" hidden>
+      <button type="button" class="back" data-go="home">← Categorias</button>
+      <p class="eyebrow" id="decade-type"></p>
+      <h1 id="decade-title"></h1>
+      <p class="lede">Escolha quais anos jogar.</p>
+      <div class="decade-grid" id="decade-grid"></div>
+    </section>
+
+    <!-- RODADA -->
+    <section id="view-round" class="view" hidden>
+      <div class="round-top">
+        <button type="button" class="back" id="quit">← Sair</button>
+        <span class="progress" id="progress"></span>
+      </div>
+      <div class="progress-bar"><span id="progress-fill"></span></div>
+      <div class="round-head">
+        <div class="year" id="year"></div>
+        <div>
+          <p class="eyebrow" id="round-cat"></p>
+          <p class="round-q" id="round-q">Qual você salva?</p>
+        </div>
+      </div>
+      <div class="round-tools">
+        <button type="button" class="tool" id="sound" aria-pressed="true">Som ligado</button>
+        <button type="button" class="tool" id="skip" hidden>Mostrar todas</button>
+      </div>
+      <div class="options" id="options"></div>
+      <div class="round-foot">
+        <p class="note" id="round-note" role="status"></p>
+        <button type="button" class="btn" id="next" hidden>Próximo ano →</button>
+      </div>
+    </section>
+
+    <!-- RESUMO -->
+    <section id="view-summary" class="view" hidden>
+      <p class="eyebrow" id="sum-cat"></p>
+      <h1 id="sum-title"></h1>
+      <p class="lede" id="sum-lede"></p>
+      <ol class="sum-list" id="sum-list"></ol>
+      <div class="sum-actions">
+        <button type="button" class="btn" id="share">Copiar minha lista</button>
+        <button type="button" class="btn btn-ghost" data-go="home">Jogar outra categoria</button>
+      </div>
+      <textarea id="share-fallback" class="share-fallback" readonly hidden aria-label="Texto para compartilhar"></textarea>
+    </section>
+
+    <!-- COMO FUNCIONA -->
+    <section id="view-how" class="view" hidden>
+      <button type="button" class="back" data-go="home">← Categorias</button>
+      <h1>Como funciona</h1>
+      <div class="prose">
+        <p>Cada rodada é um ano. Aparecem oito músicas lançadas naquele ano dentro da categoria escolhida, e todo mundo vê as mesmas opções.</p>
+        <p>Você salva uma. Depois do voto aparece a porcentagem de pessoas que salvou cada música naquele ano.</p>
+        <p>Cada pessoa tem um voto por rodada. Se jogar a mesma rodada de novo, o voto novo substitui o anterior.</p>
+        <p>Nas categorias misturadas, cada rodada coloca quatro músicas brasileiras contra quatro gringas.</p>
+        <p>As músicas aparecem uma por vez, cada uma tocando um trechinho. Use o botão de play na capa para ouvir mais um pouco ou pausar, e "Mostrar todas" para pular a apresentação. "Ouvir" abre a música inteira no YouTube. Capas e trechos vêm do Deezer.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="wrap foot muted">Salva Uma · os anos são de lançamento das músicas</footer>
+
+  <script src="/game.js"></script>
+  <script src="/covers.js"></script>
+  <script src="/app.js"></script>
+</body>
+</html>
