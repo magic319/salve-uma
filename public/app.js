@@ -181,7 +181,8 @@
     id: null,           // música carregada no <audio>
     positions: {},      // onde cada música parou, para o play continuar dali
     previews: {},       // id -> link do trecho (null = sem trecho)
-    soundOn: load('salvauma:sound', true)
+    soundOn: load('salvauma:sound', true),
+    volume: Math.min(1, Math.max(0, Number(load('salvauma:volume', 0.8)) || 0))
   };
   const intro = { token: 0, running: false, wake: null };
   let audioGen = 0; // muda a cada play/pausa: fades antigos não mexem no som novo
@@ -227,7 +228,7 @@
       else audio.addEventListener('loadedmetadata', () => { audio.currentTime = pos >= 29 ? 0 : pos; }, { once: true });
       audio.volume = 0;
       await audio.play();
-      fade(1, 250);
+      fade(player.volume, 250);
       return true;
     } catch { return false; } // navegador bloqueou o som ou o link falhou
   }
@@ -324,6 +325,19 @@
   });
   $('skip').addEventListener('click', () => endIntro());
   renderSoundToggle();
+
+  // Volume: vale na hora para o que está tocando e fica salvo no navegador
+  const volumeInput = $('volume');
+  volumeInput.value = String(player.volume);
+  function paintVolume() { volumeInput.style.setProperty('--fill', (player.volume * 100) + '%'); }
+  volumeInput.addEventListener('input', () => {
+    player.volume = Number(volumeInput.value);
+    audioGen++; // interrompe um fade em andamento para não sobrescrever o volume novo
+    if (!audio.paused) audio.volume = player.volume;
+    paintVolume();
+    save('salvauma:volume', player.volume);
+  });
+  paintVolume();
 
   function renderRound() {
     const round = state.rounds[state.index];
