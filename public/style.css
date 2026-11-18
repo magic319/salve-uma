@@ -1,16 +1,17 @@
 /* Layout: coluna única centralizada; o ano gigante é o centro de cada rodada.
-   Cores: verde = Brasil, azul = gringa, amarelo = a música salva. */
+   Base neutra (creme no claro, quase preto no escuro); a cor fica só nos detalhes:
+   verde = Brasil, azul = gringa, amarelo = a música salva. */
 :root {
-  --bg: #eef3ee;
-  --surface: #ffffff;
-  --surface-2: #e3ebe4;
-  --ink: #10201a;
-  --muted: #56675e;
-  --line: #cfdad2;
-  --br: #08844a;
-  --gr: #2f4fd8;
-  --sun: #f4b400;
-  --sun-ink: #2e2200;
+  --bg: #f4efe6;
+  --surface: #fbf8f2;
+  --surface-2: #ebe4d7;
+  --ink: #221d17;
+  --muted: #6b6255;
+  --line: #ddd4c4;
+  --br: #2f7a50;
+  --gr: #3c55b8;
+  --sun: #e5a50a;
+  --sun-ink: #2a1d00;
   --danger: #b3261e;
   --font-display: "Bricolage Grotesque", "Arial Black", system-ui, sans-serif;
   --font-body: "Figtree", system-ui, -apple-system, "Segoe UI", sans-serif;
@@ -19,14 +20,14 @@
 }
 @media (prefers-color-scheme: dark) {
   :root {
-    --bg: #0c1611;
-    --surface: #14211a;
-    --surface-2: #1b2b22;
-    --ink: #e8f1eb;
-    --muted: #93a69b;
-    --line: #26392e;
-    --br: #3ccb7f;
-    --gr: #8ea2ff;
+    --bg: #0d0d0d;
+    --surface: #161616;
+    --surface-2: #202020;
+    --ink: #f1eee8;
+    --muted: #9b968d;
+    --line: #2a2a2a;
+    --br: #4cc98a;
+    --gr: #8fa4ff;
     --sun: #ffc83d;
     --sun-ink: #241a00;
     --danger: #ff8a80;
