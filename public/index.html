@@ -3,18 +3,30 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>Salva Uma</title>
+  <title>Salve Uma</title>
   <meta name="description" content="Uma música por ano. Você salva uma, as outras vão embora. Veja quantos por cento do Brasil salvou a mesma.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Figtree:wght@400;500;600&family=JetBrains+Mono:wght@500;700&display=swap">
   <link rel="stylesheet" href="/style.css">
+  <link rel="icon" href="/logo.svg" type="image/svg+xml">
 </head>
 <body>
   <header class="topbar">
     <div class="wrap topbar-inner">
       <button class="logo" id="logo" type="button" aria-label="Voltar ao início">
-        <span class="logo-mark" aria-hidden="true"></span>Salva Uma
+        <svg class="logo-mark" viewBox="0 0 40 40" aria-hidden="true">
+          <g class="logo-disc">
+            <circle cx="20" cy="20" r="19" class="lm-vinyl"/>
+            <circle cx="20" cy="20" r="15.5" class="lm-groove"/>
+            <circle cx="20" cy="20" r="12.5" class="lm-groove"/>
+            <path d="M8.5 13.5 A13.5 13.5 0 0 1 15 7.6" class="lm-shine"/>
+            <circle cx="20" cy="20" r="7.2" class="lm-buoy"/>
+            <circle cx="20" cy="20" r="7.2" class="lm-buoy-stripes" stroke-dasharray="5.655 5.655" stroke-dashoffset="2.83"/>
+            <circle cx="20" cy="20" r="2.2" class="lm-hole"/>
+          </g>
+        </svg>
+        <span class="logo-word">Salve <em>Uma</em></span>
       </button>
       <nav class="topnav">
         <button type="button" class="link-btn" data-go="home">Categorias</button>
@@ -113,7 +125,7 @@
     </section>
   </main>
 
-  <footer class="wrap foot muted">Salva Uma · os anos são de lançamento das músicas</footer>
+  <footer class="wrap foot muted">Salve Uma · os anos são de lançamento das músicas</footer>
 
   <script src="/game.js"></script>
   <script src="/covers.js"></script>

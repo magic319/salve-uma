@@ -123,4 +123,4 @@ function save(covers) {
 
 // node scripts/fetch-covers.js roda a busca; require() só exporta a função de busca
 if (require.main === module) main();
-else module.exports = { findCover };
+else module.exports = { findCover, score, search };

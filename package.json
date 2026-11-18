@@ -1,5 +1,5 @@
 {
-  "name": "salva-uma",
+  "name": "salve-uma",
   "version": "1.0.0",
   "description": "Jogo de escolher uma música por ano, com votos e porcentagens compartilhados.",
   "main": "server.js",

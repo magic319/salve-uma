@@ -235,5 +235,5 @@ app.use((err, req, res, next) => {
 });
 
 store.init()
-  .then(() => app.listen(PORT, () => console.log(`Salva Uma rodando em http://localhost:${PORT} (votos: ${store.kind})`)))
+  .then(() => app.listen(PORT, () => console.log(`Salve Uma rodando em http://localhost:${PORT} (votos: ${store.kind})`)))
   .catch((e) => { console.error('Falha ao iniciar o banco:', e); process.exit(1); });

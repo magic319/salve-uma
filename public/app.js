@@ -256,7 +256,10 @@
       }
     });
   }
-  ['play', 'pause', 'ended'].forEach((ev) => audio.addEventListener(ev, syncPlayButtons));
+  ['play', 'pause', 'ended'].forEach((ev) => audio.addEventListener(ev, () => {
+    syncPlayButtons();
+    document.body.classList.toggle('is-playing', !audio.paused); // o disco do logo gira
+  }));
   audio.addEventListener('timeupdate', () => {
     const card = player.id && document.querySelector('.opt[data-id="' + CSS.escape(player.id) + '"] .playbar span');
     if (card && audio.duration) card.style.width = (audio.currentTime / audio.duration * 100) + '%';
@@ -468,7 +471,7 @@
   }
 
   $('share').addEventListener('click', async () => {
-    const lines = ['Salva Uma: ' + state.cat.name, ''];
+    const lines = ['Salve Uma: ' + state.cat.name, ''];
     state.picks.forEach((p) => lines.push(p.round.year + ': ' + p.song.title + ' (' + p.song.artist + ')'));
     lines.push('', 'Concordei com a maioria em ' + state.picks.filter((p) => p.matched).length + ' de ' + state.picks.length + ' anos.');
     lines.push(location.origin);

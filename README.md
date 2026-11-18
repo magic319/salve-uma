@@ -1,4 +1,4 @@
-# Salva Uma
+# Salve Uma
 
 Jogo de música: a cada rodada aparece um ano e 8 músicas lançadas nele, uma por vez, cada uma com a capa do álbum e tocando um trechinho. Um botão de play na capa continua a música ou pausa. Você salva uma e vê quantos por cento das pessoas salvaram cada música.
 
@@ -41,7 +41,7 @@ ano|origem|gênero|artista|título
 - gêneros BR: `sert`, `funk`, `pag`, `mpb`, `rocknac`, `rapnac`, `popbr`
 - gêneros gringos: `pop`, `rock`, `hip`, `ele`, `lat`
 
-Cada gênero tem 8 músicas em todos os anos do seu intervalo, sem pular ano (exceto Rap Nacional e MPB/Pop BR, que jogam juntos com outro gênero: Rap & Funk e MPB & Pop BR somam 8 por ano). Cada rodada mostra até 8 músicas, revezando entre os gêneros da categoria; nas misturadas são 4 brasileiras e 4 gringas. Um ano só aparece como rodada quando a categoria tem pelo menos 2 músicas naquele ano. As opções de cada rodada são sorteadas de forma fixa, então todo mundo vê as mesmas e as porcentagens são comparáveis.
+O jogo vai de 1980 em diante. A ideia é que cada ano tenha os 8 maiores hits do gênero (paradas de fim de ano quando existem; nas décadas sem parada, os sucessos mais lembrados). Cada categoria tem 8 músicas em todos os anos do seu intervalo, sem pular ano. Nas categorias juntadas a divisão é fixa: Rap & Funk = 4 + 4 (1992–1993 só rap); MPB & Pop BR = 4 + 4 (8 de MPB até 1982, 8 de Pop BR em 2022–2023). O ano de cada música é o ano em que ela fez sucesso. Cada rodada mostra até 8 músicas, revezando entre os gêneros da categoria; nas misturadas são 4 brasileiras e 4 gringas. Um ano só aparece como rodada quando a categoria tem pelo menos 2 músicas naquele ano. As opções de cada rodada são sorteadas de forma fixa, então todo mundo vê as mesmas e as porcentagens são comparáveis.
 
 Atenção: incluir ou remover músicas de um ano pode mudar as opções daquela rodada. Votos em músicas que saíram da rodada deixam de contar.
 

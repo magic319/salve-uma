@@ -13,6 +13,8 @@
   --sun: #e5a50a;
   --sun-ink: #2a1d00;
   --danger: #b3261e;
+  --buoy: #e2553a;
+  --buoy-base: #fbf8f2; /* faixas claras da boia */
   --font-display: "Bricolage Grotesque", "Arial Black", system-ui, sans-serif;
   --font-body: "Figtree", system-ui, -apple-system, "Segoe UI", sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, Consolas, monospace;
@@ -31,6 +33,8 @@
     --sun: #ffc83d;
     --sun-ink: #241a00;
     --danger: #ff8a80;
+    --buoy: #ff6b4a;
+    --buoy-base: #1f1f1f; /* no disco claro, as faixas viram escuras */
     color-scheme: dark;
   }
 }
@@ -68,7 +72,20 @@ h2 { font-size: 1.35rem; font-weight: 700; }
 .topbar { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--bg); border-bottom: 1px solid var(--line); }
 .topbar-inner { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding-block: 12px; }
 .logo { display: flex; align-items: center; gap: 10px; background: none; border: 0; padding: 0; cursor: pointer; font: 800 1.25rem/1 var(--font-display); letter-spacing: -0.02em; }
-.logo-mark { width: 22px; height: 22px; border-radius: 50%; background: radial-gradient(circle at 50% 50%, var(--bg) 0 18%, var(--sun) 19% 34%, var(--ink) 35% 100%); }
+/* Logo: disco de vinil com uma boia salva-vidas no selo. Gira quando passa o mouse
+   e fica girando enquanto um trecho está tocando. */
+.logo-mark { width: 32px; height: 32px; flex: none; overflow: visible; }
+.logo-disc { transform-origin: 20px 20px; transition: transform .5s cubic-bezier(.2,.8,.2,1); }
+.lm-vinyl { fill: var(--ink); }
+.lm-groove { fill: none; stroke: var(--bg); stroke-opacity: .18; stroke-width: .8; }
+.lm-shine { fill: none; stroke: var(--bg); stroke-opacity: .45; stroke-width: 1.6; stroke-linecap: round; }
+.lm-buoy { fill: none; stroke: var(--buoy-base); stroke-width: 4.2; }
+.lm-buoy-stripes { fill: none; stroke: var(--buoy); stroke-width: 4.2; }
+.lm-hole { fill: var(--bg); }
+.logo:hover .logo-disc { transform: rotate(140deg); }
+body.is-playing .logo-disc { animation: logo-spin 1.8s linear infinite; }
+@keyframes logo-spin { to { transform: rotate(360deg); } }
+.logo-word em { font-style: normal; color: var(--buoy); }
 .topnav { display: flex; gap: 4px; }
 .link-btn { background: none; border: 0; padding: 8px 10px; border-radius: 8px; cursor: pointer; color: var(--muted); font-weight: 600; }
 .link-btn:hover { color: var(--ink); background: var(--surface-2); }
@@ -242,4 +259,5 @@ h2 { font-size: 1.35rem; font-weight: 700; }
 
 @media (prefers-reduced-motion: reduce) {
   * { transition: none !important; }
+  body.is-playing .logo-disc { animation: none; }
 }
